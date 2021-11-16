@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_textview">8dp</dimen>
+    <dimen name="text_size">24sp</dimen>
+    <dimen name="liner_layout_margin">24dp</dimen>
+    <dimen name="progress_bar_margin">32dp</dimen>
+    <dimen name="meme_share_button_margin">16dp</dimen>
+</resources>

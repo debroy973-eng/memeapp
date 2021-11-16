@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Meme app</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="author">Author:</string>
+    <string name="subreddit">Subreddit:</string>
+    <string name="menu">Menu</string>
+    <string name="chooser">Please select a chooser</string>
+    <string name="share_app">Share app</string>
+    <string name="warning">Please select an app to share</string>
+    <string name="about_app">About app</string>
+    <string name="about_text_view">This app shows a number of memes from reddit.
+    To load more memes just swipe and wait for the memes to show itself.
+    Disclaimer:User discretion is advised</string>
+    <string name="share_app_message">Check put this meme app</string>
+    <string name="meme_sharing_message">Check out this meme:</string>
+    <string name="enable_internet">Enable internet</string>
+</resources>

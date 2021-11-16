@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="please_wait">Please wait...</string>
+    <string name="author">Author:</string>
+    <string name="subreddit">Subreddit:</string>
+    <string name="menu">Menu</string>
+    <string name="share_app">share app</string>
+    <string name="about_app">About app</string>
+    <string name="share_app_message">Check put this meme app</string>
+    <string name="meme_sharing_message">Check out this meme:</string>
+    <string name="enable_internet">Enable internet</string>
+</resources>
