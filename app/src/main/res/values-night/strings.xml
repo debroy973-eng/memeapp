@@ -9,4 +9,6 @@
     <string name="share_app_message">Check put this meme app</string>
     <string name="meme_sharing_message">Check out this meme:</string>
     <string name="enable_internet">Enable internet</string>
+    <string name="alertdialog_message">Please enable the internet to use this app</string>
+    <string name="enable">Enable</string>
 </resources>

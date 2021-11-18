@@ -1,18 +1,25 @@
 package com.example.memeapp
 
+import android.Manifest
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -26,7 +33,8 @@ import com.google.android.material.snackbar.Snackbar
 class MainActivity : AppCompatActivity(),SwipeRefreshLayout.OnRefreshListener,MemeAdapter.OnItemClickListener {
     private lateinit var mAdapterData:MemeAdapter
     private lateinit var recyclerView:RecyclerView
-    private lateinit var mSwipetoRefreshLayout: SwipeRefreshLayout
+    private lateinit var mSwipeToRefreshLayout: SwipeRefreshLayout
+    private lateinit var mProgressBarMain:ProgressBar
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,37 +43,37 @@ class MainActivity : AppCompatActivity(),SwipeRefreshLayout.OnRefreshListener,Me
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.my_toolbar))
         recyclerView=binding.recyclerView
+        mProgressBarMain=binding.progressBarMain
+        mProgressBarMain.visibility=View.VISIBLE
         val linearLayoutManager=LinearLayoutManager(this)
         linearLayoutManager.orientation=LinearLayoutManager.VERTICAL
         recyclerView.layoutManager=linearLayoutManager
-        mSwipetoRefreshLayout=binding.swipeRefreshLayout
+        mSwipeToRefreshLayout=binding.swipeRefreshLayout
         mAdapterData= MemeAdapter(this)
         recyclerView.adapter=mAdapterData
         getData()
-        mSwipetoRefreshLayout.setOnRefreshListener {
+        mSwipeToRefreshLayout.setOnRefreshListener {
             getData()
-            mSwipetoRefreshLayout.isRefreshing=false
+            mSwipeToRefreshLayout.isRefreshing=false
             Toast.makeText(this,getString(R.string.please_wait),Toast.LENGTH_LONG).show()
         }
         val connectivityManager:ConnectivityManager= getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo=connectivityManager.activeNetwork
         if(networkInfo==null){
-            val constraintLayout=binding.constraintLayout
-            Snackbar.make(constraintLayout,"This app requires internet to show the memes",Snackbar.LENGTH_LONG)
-                .setAction(getString(R.string.enable_internet)){
-                    val intent = Intent(Intent.ACTION_MAIN)
-                    intent.setClassName("com.android.phone", "com.android.phone.NetworkSetting")
-                    startActivity(intent)
-                }
+            val builder=AlertDialog.Builder(this)
+            builder.setMessage(getString(R.string.alertdialog_message))
+                .setPositiveButton(getString(R.string.enable),DialogInterface.OnClickListener { dialogInterface, i ->
+                    startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS))
+                })
+                .create()
                 .show()
         }
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId){
             R.id.share_button->{
                 val newIntent=Intent().apply {
                     action=Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT,getString(R.string.share_app_message))
+                    putExtra(Intent.EXTRA_TEXT,getString(R.string.share_app_message).plus("https://drive.google.com/file/d/1b8ZDfiIXuz5FLAK2-uNCsvnkESX-Lr_D/view?usp=sharing"))
                     type="text/plain"
                 }
                 val titleChooser=resources.getString(R.string.chooser)
@@ -90,7 +98,6 @@ class MainActivity : AppCompatActivity(),SwipeRefreshLayout.OnRefreshListener,Me
         inflater.inflate(R.menu.menu_item,menu)
         return true
     }
-
     private fun getData(){
         val data=ArrayList<MemeData>()
         val url="https://meme-api.herokuapp.com/gimme/50"
@@ -106,13 +113,16 @@ class MainActivity : AppCompatActivity(),SwipeRefreshLayout.OnRefreshListener,Me
                         val subReddit=jsonObejct.getString("subreddit")
                         data.add(MemeData(memeUrl,author,subReddit,postLink))
                     }
+                    mProgressBarMain.visibility= View.GONE
                     mAdapterData.updateData(data)
                 }catch (e:Exception){
                     e.printStackTrace()
+                    mProgressBarMain.visibility= View.GONE
                 }
             },
             Response.ErrorListener { error ->
                 error.printStackTrace()
+                mProgressBarMain.visibility= View.GONE
             }
         )
         MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
@@ -120,7 +130,7 @@ class MainActivity : AppCompatActivity(),SwipeRefreshLayout.OnRefreshListener,Me
 
     override fun onRefresh() {
         getData()
-        mSwipetoRefreshLayout.isRefreshing=false
+        mSwipeToRefreshLayout.isRefreshing=false
     }
 
     override fun onItemClick(item: MemeData) {
