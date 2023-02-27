@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(),SwipeRefreshLayout.OnRefreshListener,Me
             R.id.share_button->{
                 val newIntent=Intent().apply {
                     action=Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT,getString(R.string.share_app_message).plus("https://drive.google.com/file/d/1b8ZDfiIXuz5FLAK2-uNCsvnkESX-Lr_D/view?usp=sharing"))
+                    putExtra(Intent.EXTRA_TEXT,getString(R.string.share_app_message).plus("https://drive.google.com/file/d/1lZnWNWS9GWy0CKn5o4fXgsnwyR5MqJVM/view?usp=share_link"))
                     type="text/plain"
                 }
                 val titleChooser=resources.getString(R.string.chooser)
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity(),SwipeRefreshLayout.OnRefreshListener,Me
     }
     private fun getData(){
         val data=ArrayList<MemeData>()
-        val url="https://meme-api.herokuapp.com/gimme/50"
+        val url="https://meme-api.com/gimme/50"
         val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
             Response.Listener { response ->
                 try {
